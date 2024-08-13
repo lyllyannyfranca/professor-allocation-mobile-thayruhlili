@@ -2,6 +2,7 @@ package com.example.retrofit
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,8 +26,8 @@ class CourseActivity : AppCompatActivity() {
                 .commit()
         }
 
-        val itemsRecyclerView : RecyclerView = findViewById(R.id.rvCourseList)
-        itemsRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        val itemsTableRecyclerView : RecyclerView = findViewById(R.id.rvCourseList)
+        itemsTableRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         var courseList = mutableListOf<ItemsTable>()
 
@@ -35,16 +36,21 @@ class CourseActivity : AppCompatActivity() {
        courseService.getAllCourses(
            onCall = {courses ->
                if (courses != null) {
-                   courses.forEach { course -> courseList.add(ItemsTable(course.id, course.name)) }
+                   courses.forEach { course ->
+                       courseList.add(ItemsTable(course.id, course.name))
+                   }
+                   courseList.sortBy { it.id }
+                   val adapter = ItemsTableAdapter(courseList)
+                   itemsTableRecyclerView.adapter = adapter
+               } else {
+                   Toast.makeText(this, "Nenhum curso foi localizado!", Toast.LENGTH_SHORT)
                }
+
            },
-           onError = {
-               Log.i(">>>", "Error!")
+           onError = {messageError ->
+               Toast.makeText(this, "${messageError}", Toast.LENGTH_SHORT)
            }
        )
-
-        val adapter = itemsRecyclerView(courseList)
-        itemsRecyclerView.adapter = adapter
 
     }
 }
