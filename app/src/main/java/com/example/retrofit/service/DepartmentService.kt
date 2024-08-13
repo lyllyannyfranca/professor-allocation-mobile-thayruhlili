@@ -1,32 +1,90 @@
 package com.example.retrofit.service
 
 import com.example.retrofit.model.Department
+import com.example.retrofit.repository.DepartmentRepository
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.DELETE
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.PUT
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.Callback
+import retrofit2.Response
 
-interface DepartmentService {
+class DepartmentService(private val departmentRepository: DepartmentRepository) {
 
-    @GET("departments")
-    fun getAllDepartments(@Query("name") name : String) : Call<List<Department>>
+    fun getAllDepartments(name: String, onCall: (departmentsList: List<Department>?) -> Unit, onError: (messageError: String) -> Unit) {
+        departmentRepository.getAllDepartments(name).enqueue(object : Callback<List<Department>> {
+            override fun onResponse(call: Call<List<Department>>, response: Response<List<Department>>) {
+                val departments = response.body()
+                onCall(departments)
+            }
 
-    @GET("departments/{department_id}")
-    fun getDepartmentById(@Path("department_id") departmentId : Long) : Call<Department>
+            override fun onFailure(call: Call<List<Department>>, t: Throwable) {
+                val message = t.message
+                if (message != null) onError(message)
+            }
+        })
+    }
 
-    @POST("departments")
-    fun createDepartment(@Body department : Department) : Call<Any>
+    fun getDepartmentById(departmentId: Long, onCall: (department: Department?) -> Unit, onError: (messageError: String) -> Unit) {
+        departmentRepository.getDepartmentById(departmentId).enqueue(object : Callback<Department> {
+            override fun onResponse(call: Call<Department>, response: Response<Department>) {
+                val department = response.body()
+                onCall(department)
+            }
 
-    @PUT("departments/{department_id}")
-    fun updateDepartment(@Path("department_id") departmentId: Long, @Body department : Department) : Call<Any>
+            override fun onFailure(call: Call<Department>, t: Throwable) {
+                val message = t.message
+                if (message != null) onError(message)
+            }
+        })
+    }
 
-    @DELETE("departments/{department_id}")
-    fun deleteDepartmentById(@Path("department_id") departmentId: Long) : Call<Unit>
+    fun createDepartment(department: Department, onCall: () -> Unit, onError: (messageError: String) -> Unit) {
+        departmentRepository.createDepartment(department).enqueue(object : Callback<Any> {
+            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                onCall()
+            }
 
-    @DELETE("departments")
-    fun deleteAllDepartments() : Call<Unit>
+            override fun onFailure(call: Call<Any>, t: Throwable) {
+                val message = t.message
+                if (message != null) onError(message)
+            }
+        })
+    }
+
+    fun updateDepartment(departmentId: Long, department: Department, onCall: () -> Unit, onError: (messageError: String) -> Unit) {
+        departmentRepository.updateDepartment(departmentId, department).enqueue(object : Callback<Any> {
+            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                onCall()
+            }
+
+            override fun onFailure(call: Call<Any>, t: Throwable) {
+                val message = t.message
+                if (message != null) onError(message)
+            }
+        })
+    }
+
+    fun deleteDepartmentById(departmentId: Long, onCall: () -> Unit, onError: (messageError: String) -> Unit) {
+        departmentRepository.deleteDepartmentById(departmentId).enqueue(object : Callback<Unit> {
+            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                onCall()
+            }
+
+            override fun onFailure(call: Call<Unit>, t: Throwable) {
+                val message = t.message
+                if (message != null) onError(message)
+            }
+        })
+    }
+
+    fun deleteAllDepartments(onCall: () -> Unit, onError: (messageError: String) -> Unit) {
+        departmentRepository.deleteAllDepartments().enqueue(object : Callback<Unit> {
+            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                onCall()
+            }
+
+            override fun onFailure(call: Call<Unit>, t: Throwable) {
+                val message = t.message
+                if (message != null) onError(message)
+            }
+        })
+    }
 }

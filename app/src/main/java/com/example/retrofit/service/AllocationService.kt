@@ -1,37 +1,118 @@
 package com.example.retrofit.service
 
 import com.example.retrofit.model.Allocation
+import com.example.retrofit.repository.AllocationRepository
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.DELETE
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.PUT
-import retrofit2.http.Path
+import retrofit2.Callback
+import retrofit2.Response
 
-interface AllocationService {
+class AllocationService(private val allocationRepository: AllocationRepository) {
 
-    @GET("allocations")
-    fun getAllAllocations() : Call<List<Allocation>>
+    fun getAllAllocations(onCall: (allocationsList: List<Allocation>?) -> Unit, onError: (messageError: String) -> Unit) {
+        allocationRepository.getAllAllocations().enqueue(object : Callback<List<Allocation>> {
+            override fun onResponse(call: Call<List<Allocation>>, response: Response<List<Allocation>>) {
+                val allocations = response.body()
+                onCall(allocations)
+            }
 
-    @GET("allocations/{allocation_id}")
-    fun getAllocationById(@Path("allocation_id") allocationId : Long) : Call<Allocation>
+            override fun onFailure(call: Call<List<Allocation>>, t: Throwable) {
+                val message = t.message
+                if (message != null) onError(message)
+            }
+        })
+    }
 
-    @GET("allocations/course/{course_id}")
-    fun getAllocationsByCourse(@Path("course_id") courseId : Long) : Call<List<Allocation>>
+    fun getAllocationById(allocationId: Long, onCall: (allocation: Allocation?) -> Unit, onError: (messageError: String) -> Unit) {
+        allocationRepository.getAllocationById(allocationId).enqueue(object : Callback<Allocation> {
+            override fun onResponse(call: Call<Allocation>, response: Response<Allocation>) {
+                val allocation = response.body()
+                onCall(allocation)
+            }
 
-    @GET("allocations/professor/{professor_id}")
-    fun getAllocationsByProfessor(@Path("professor_id") professorId : Long) : Call<List<Allocation>>
+            override fun onFailure(call: Call<Allocation>, t: Throwable) {
+                val message = t.message
+                if (message != null) onError(message)
+            }
+        })
+    }
 
-    @POST("allocations")
-    fun createAllocation(@Body allocation : Allocation) : Call<Any>
+    fun getAllocationsByCourse(courseId: Long, onCall: (allocationsList: List<Allocation>?) -> Unit, onError: (messageError: String) -> Unit) {
+        allocationRepository.getAllocationsByCourse(courseId).enqueue(object : Callback<List<Allocation>> {
+            override fun onResponse(call: Call<List<Allocation>>, response: Response<List<Allocation>>) {
+                val allocations = response.body()
+                onCall(allocations)
+            }
 
-    @PUT("allocations/{allocation_id}")
-    fun updateAllocation(@Path("allocation_id") allocationId: Long, @Body allocation : Allocation) : Call<Any>
+            override fun onFailure(call: Call<List<Allocation>>, t: Throwable) {
+                val message = t.message
+                if (message != null) onError(message)
+            }
+        })
+    }
 
-    @DELETE("allocations/{allocation_id}")
-    fun deleteAllocationById(@Path("allocation_id") allocationId: Long) : Call<Unit>
+    fun getAllocationsByProfessor(professorId: Long, onCall: (allocationsList: List<Allocation>?) -> Unit, onError: (messageError: String) -> Unit) {
+        allocationRepository.getAllocationsByProfessor(professorId).enqueue(object : Callback<List<Allocation>> {
+            override fun onResponse(call: Call<List<Allocation>>, response: Response<List<Allocation>>) {
+                val allocations = response.body()
+                onCall(allocations)
+            }
 
-    @DELETE("allocations")
-    fun deleteAllAllocations() : Call<Unit>
+            override fun onFailure(call: Call<List<Allocation>>, t: Throwable) {
+                val message = t.message
+                if (message != null) onError(message)
+            }
+        })
+    }
+
+    fun createAllocation(allocation: Allocation, onCall: () -> Unit, onError: (messageError: String) -> Unit) {
+        allocationRepository.createAllocation(allocation).enqueue(object : Callback<Any> {
+            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                onCall()
+            }
+
+            override fun onFailure(call: Call<Any>, t: Throwable) {
+                val message = t.message
+                if (message != null) onError(message)
+            }
+        })
+    }
+
+    fun updateAllocation(allocationId: Long, allocation: Allocation, onCall: () -> Unit, onError: (messageError: String) -> Unit) {
+        allocationRepository.updateAllocation(allocationId, allocation).enqueue(object : Callback<Any> {
+            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                onCall()
+            }
+
+            override fun onFailure(call: Call<Any>, t: Throwable) {
+                val message = t.message
+                if (message != null) onError(message)
+            }
+        })
+    }
+
+    fun deleteAllocationById(allocationId: Long, onCall: () -> Unit, onError: (messageError: String) -> Unit) {
+        allocationRepository.deleteAllocationById(allocationId).enqueue(object : Callback<Unit> {
+            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                onCall()
+            }
+
+            override fun onFailure(call: Call<Unit>, t: Throwable) {
+                val message = t.message
+                if (message != null) onError(message)
+            }
+        })
+    }
+
+    fun deleteAllAllocations(onCall: () -> Unit, onError: (messageError: String) -> Unit) {
+        allocationRepository.deleteAllAllocations().enqueue(object : Callback<Unit> {
+            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                onCall()
+            }
+
+            override fun onFailure(call: Call<Unit>, t: Throwable) {
+                val message = t.message
+                if (message != null) onError(message)
+            }
+        })
+    }
 }

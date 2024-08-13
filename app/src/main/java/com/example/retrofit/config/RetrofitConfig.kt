@@ -1,20 +1,20 @@
 package com.example.retrofit.config
 
-import com.example.retrofit.service.AllocationService
-import com.example.retrofit.service.CourseService
-import com.example.retrofit.service.DepartmentService
-import com.example.retrofit.service.ProfessorService
+import com.example.retrofit.repository.AllocationRepository
+import com.example.retrofit.repository.CourseRepository
+import com.example.retrofit.repository.DepartmentRepository
+import com.example.retrofit.repository.ProfessorRepository
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitConfig {
     val retrofit = Retrofit.Builder()
-        .baseUrl("https://professor-allocation.onrender.com/")
+        .baseUrl("http://10.0.2.2:8080/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    val courseService = retrofit.create(CourseService::class.java)
-    val departmentService = retrofit.create(DepartmentService::class.java)
-    val professorService = retrofit.create(ProfessorService::class.java)
-    val allocationService = retrofit.create(AllocationService::class.java)
+    val courseRepository = retrofit.create(CourseRepository::class.java)
+    val departmentRepository = retrofit.create(DepartmentRepository::class.java)
+    val professorRepository = retrofit.create(ProfessorRepository::class.java)
+    val allocationRepository = retrofit.create(AllocationRepository::class.java)
 }

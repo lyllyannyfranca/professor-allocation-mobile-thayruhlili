@@ -1,36 +1,65 @@
 package com.example.retrofit.service
 
 import com.example.retrofit.model.Professor
+import com.example.retrofit.repository.ProfessorRepository
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.DELETE
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.PUT
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.Callback
+import retrofit2.Response
 
-interface ProfessorService {
+class ProfessorService(private val professorRepository1: ProfessorRepository) {
 
-    @GET("professors")
-    fun getAllProfessors(@Query("name") name : String) : Call<List<Professor>>
+    fun getAllProfessors(name : String, onCall : (professorsList : List<Professor>?) -> Unit, onError : (messageError : String) -> Unit) {
+        professorRepository1.getAllProfessors(name).enqueue(object : Callback<List<Professor>> {
+            override fun onResponse(p0: Call<List<Professor>>, response: Response<List<Professor>>) {
+                val professors = response.body()
+                onCall(professors)
+            }
 
-    @GET("professors/{professor_id}")
-    fun getProfessorById(@Path("professor_id") professorId : Long) : Call<Professor>
+            override fun onFailure(p0: Call<List<Professor>>, response: Throwable) {
+                val message = response.message
+                if(message != null) onError(message)
+            }
+        })
+    }
 
-    @GET("professors/department/{department_id}")
-    fun getProfessorByDepartment(@Path("department_id") departmentId : Long) : Call<List<Professor>>
+    fun getProfessorById(professorId : Long, onCall : (professor : Professor?) -> Unit, onError: (messageError: String) -> Unit) {
+        professorRepository1.getProfessorById(professorId).enqueue(object : Callback<Professor> {
+            override fun onResponse(p0: Call<Professor>, response: Response<Professor>) {
+                val professor = response.body()
+                onCall(professor)
+            }
 
-    @POST("professors")
-    fun createProfessor(@Body professor : Professor) : Call<Any>
+            override fun onFailure(p0: Call<Professor>, response: Throwable) {
+                val message = response.message
+                if (message != null) onError(message)
+            }
+        })
+    }
 
-    @PUT("professors/{professor_id}")
-    fun updateProfessor(@Path("professor_id") professorId : Long, @Body professor : Professor) : Call<Any>
+    fun geProfessorByDepartment(departmentId : Long, onCall : (professorsList : List<Professor>?) -> Unit, onError: (message : String) -> Unit) {
+        professorRepository1.getProfessorByDepartment(departmentId).enqueue(object : Callback<List<Professor>> {
+            override fun onResponse(p0: Call<List<Professor>>, response: Response<List<Professor>>) {
+                val professors = response.body()
+                onCall(professors)
+            }
 
-    @DELETE("professors/{professor_id}")
-    fun deleteProfessorById(@Path("professor_id") professorId: Long) : Call<Unit>
+            override fun onFailure(p0: Call<List<Professor>>, response: Throwable) {
+                val message = response.message
+                if (message != null) onError(message)
+            }
+        })
+    }
 
-    @DELETE("professors")
-    fun deleteAllProfessors() : Call<Unit>
+    fun createProfessor(professor : Professor, onCall : () -> Unit, onError : (message : String) -> Unit) {
+        professorRepository1.createProfessor(professor).enqueue(object : Callback<Any> {
+            override fun onResponse(p0: Call<Any>, response: Response<Any>) {
+                onCall()
+            }
 
+            override fun onFailure(p0: Call<Any>, response: Throwable) {
+                val message = response.message
+                if (message != null) onError(message)
+            }
+        })
+    }
 }

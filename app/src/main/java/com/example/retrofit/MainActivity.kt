@@ -1,11 +1,15 @@
 package com.example.retrofit
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.retrofit.adapters.MenuButtonsAdapter
 import com.example.retrofit.config.RetrofitConfig
-import com.example.retrofit.model.Course
-import com.example.retrofit.repository.CourseRepository
+import com.example.retrofit.fragments.MenuButtonsFragment
+import com.example.retrofit.listeners.MenuButtonsClickListener
+import com.example.retrofit.model.MenuButton
 
 
 class MainActivity : AppCompatActivity() {
@@ -13,19 +17,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val course = Course(50, "Curso de Java")
-
-        val courseRepository = CourseRepository(RetrofitConfig.courseService)
-
-        courseRepository.createCourse(
-            course = course,
-            onCall = {
-                Log.i(">>>", "Success!")
-            },
-            onError = {
-                Log.i(">>>", "Error!")
-            }
-        )
-
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_menuButtons, MenuButtonsFragment())
+                .commit()
+        }
     }
 }

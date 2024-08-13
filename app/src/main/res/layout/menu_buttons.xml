@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_ContainerMenu"
+    android:layout_width="70dp"
+    android:layout_height="85dp"
+    android:paddingTop="4dp"
+    android:layout_marginRight="6dp"
+    android:orientation="horizontal"
+    >
+
+    <ImageView
+        android:id="@+id/iv_iconButton"
+        android:scaleX="2.0"
+        android:scaleY="2.0"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:foregroundGravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_home_menu_foreground" />
+
+    <TextView
+        android:id="@+id/tv_labelButton"
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:text="Home"
+        android:textAlignment="center"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_iconButton" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
