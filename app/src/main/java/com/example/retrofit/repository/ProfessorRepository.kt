@@ -13,7 +13,7 @@ import retrofit2.http.Query
 interface ProfessorRepository {
 
     @GET("professors")
-    fun getAllProfessors(@Query("name") name : String) : Call<List<Professor>>
+    fun getAllProfessors(@Query("name") name : String?) : Call<List<Professor>>
 
     @GET("professors/{professor_id}")
     fun getProfessorById(@Path("professor_id") professorId : Long) : Call<Professor>

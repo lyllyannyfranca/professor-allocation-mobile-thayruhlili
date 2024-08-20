@@ -8,7 +8,7 @@ import retrofit2.Response
 
 class DepartmentService(private val departmentRepository: DepartmentRepository) {
 
-    fun getAllDepartments(name: String, onCall: (departmentsList: List<Department>?) -> Unit, onError: (messageError: String) -> Unit) {
+    fun getAllDepartments(name: String?, onCall: (departmentsList: List<Department>?) -> Unit, onError: (messageError: String) -> Unit) {
         departmentRepository.getAllDepartments(name).enqueue(object : Callback<List<Department>> {
             override fun onResponse(call: Call<List<Department>>, response: Response<List<Department>>) {
                 val departments = response.body()

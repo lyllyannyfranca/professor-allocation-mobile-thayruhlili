@@ -13,7 +13,7 @@ import retrofit2.http.Query
 interface DepartmentRepository {
 
     @GET("departments")
-    fun getAllDepartments(@Query("name") name : String) : Call<List<Department>>
+    fun getAllDepartments(@Query("name") name : String?) : Call<List<Department>>
 
     @GET("departments/{department_id}")
     fun getDepartmentById(@Path("department_id") departmentId : Long) : Call<Department>

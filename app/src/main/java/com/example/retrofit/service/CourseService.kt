@@ -8,8 +8,8 @@ import retrofit2.Response
 
 class CourseService (private val courseRepository: CourseRepository) {
 
-    fun getAllCourses(onCall: (coursesList: List<Course>?) -> Unit, onError: (messageError : String) -> Unit) {
-        courseRepository.getAllCourses().enqueue(object : Callback<List<Course>> {
+    fun getAllCourses(name : String?, onCall: (coursesList: List<Course>?) -> Unit, onError: (messageError : String) -> Unit) {
+        courseRepository.getAllCourses(name).enqueue(object : Callback<List<Course>> {
             override fun onResponse(p0: Call<List<Course>>, response: Response<List<Course>>) {
                 val courses = response.body()
                 onCall(courses)

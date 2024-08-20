@@ -8,7 +8,7 @@ import retrofit2.Response
 
 class ProfessorService(private val professorRepository1: ProfessorRepository) {
 
-    fun getAllProfessors(name : String, onCall : (professorsList : List<Professor>?) -> Unit, onError : (messageError : String) -> Unit) {
+    fun getAllProfessors(name : String?, onCall : (professorsList : List<Professor>?) -> Unit, onError : (messageError : String) -> Unit) {
         professorRepository1.getAllProfessors(name).enqueue(object : Callback<List<Professor>> {
             override fun onResponse(p0: Call<List<Professor>>, response: Response<List<Professor>>) {
                 val professors = response.body()
